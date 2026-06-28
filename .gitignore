@@ -68,3 +68,6 @@ vcpkg_installed/
 benchmarks/
 Testing/
 .cache/
+
+# IDE
+.vscode
