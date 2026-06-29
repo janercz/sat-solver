@@ -39,8 +39,8 @@ int main(int argc, char *argv[]) {
         }
 
         std::cout << std::fixed << std::setprecision(6);
-        std::cout << solver.get_load_time() << "\n";
-        std::cout << solver.get_solve_time() << "\n";
+        std::cout << solver.get_load_time() << " sec\n";
+        std::cout << solver.get_solve_time() << " sec\n";
         std::cout << solver.get_unit_props() << "\n";
         std::cout << solver.get_decision_count() << "\n";
 
