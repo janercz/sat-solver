@@ -35,12 +35,25 @@ class Solver {
     // Level boundaries
     std::vector<int> trail_lim;
 
+    // Statistics
+    long long unit_props = 0;
+    long long decision_count = 0;
+    double load_time = 0.0;
+    double solve_time = 0.0;
+
   public:
     // Initialize solver
     void load_formula(const Formula &formula);
 
     // Main solver loop
     bool solve();
+
+    // Getters
+    double get_load_time() const { return load_time; }
+    double get_solve_time() const { return solve_time; }
+    long long get_unit_props() const { return unit_props; }
+    long long get_decision_count() const { return decision_count; }
+    const std::vector<Value> &get_assigns() const { return assigns; }
 
   private:
     bool enqueue(Lit p);

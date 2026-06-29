@@ -1,5 +1,6 @@
 #include "Solver.hpp"
 #include <algorithm>
+#include <chrono>
 
 static Value get_literal_value(Lit p, const std::vector<Value> &assigns) {
     Var v = lit_to_var(p);
@@ -15,6 +16,8 @@ static Value get_literal_value(Lit p, const std::vector<Value> &assigns) {
 }
 
 void Solver::load_formula(const Formula &formula) {
+    auto start = std::chrono::high_resolution_clock::now();
+
     vars = formula.num_vars;
     clauses = formula.clauses;
 
@@ -31,17 +34,24 @@ void Solver::load_formula(const Formula &formula) {
             enqueue(clauses[i].literals[0]);
         }
     }
+
+    auto stop = std::chrono::high_resolution_clock::now();
+    load_time = std::chrono::duration<double>(stop - start).count();
 }
 
 bool Solver::solve() {
+    auto start = std::chrono::high_resolution_clock::now();
+    bool result;
     while (true) {
         if (!propagate()) {
             if (!backtrack()) {
-                return false; // UNSAT
+                result = false; // UNSAT
+                break;
             }
         } else {
             if (trail.size() == static_cast<size_t>(vars)) {
-                return true; // SAT
+                result = true; // SAT
+                break;
             } else {
                 // Pick a literal
                 Lit next_p = -1;
@@ -57,6 +67,11 @@ bool Solver::solve() {
             }
         }
     }
+
+    auto stop = std::chrono::high_resolution_clock::now();
+    solve_time = std::chrono::duration<double>(stop - start).count();
+
+    return result;
 }
 
 bool Solver::enqueue(Lit p) {
@@ -77,12 +92,15 @@ bool Solver::enqueue(Lit p) {
     prop_q.push(p);
     trail.push_back(p);
 
+    unit_props++;
     return true;
 }
 
 void Solver::assume(Lit p) {
     trail_lim.push_back(trail.size());
     enqueue(p);
+
+    decision_count++;
 }
 
 bool Solver::propagate() {
@@ -153,16 +171,23 @@ bool Solver::backtrack() {
 
         while (!trail.empty()) {
             bool is_decision = (!trail_lim.empty() && trail_lim.back() == static_cast<int>(trail.size() - 1));
-            if (is_decision)
+            if (is_decision) {
                 break;
+            }
             undo_one();
         }
 
         Lit p = trail.back();
         Var v = lit_to_var(p);
 
-        if (tries[v] < 2 && enqueue(negate_lit(p))) {
-            return true;
+        if (tries[v] < 2) {
+            int saved_tries = tries[v];
+            undo_one();
+            tries[v] = saved_tries;
+
+            if (enqueue(negate_lit(p))) {
+                return true;
+            }
         } else {
             undo_one();
         }
