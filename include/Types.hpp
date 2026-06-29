@@ -25,7 +25,7 @@ inline Lit negate_lit(Lit l) {
 
 // Check if literal is positive
 inline bool is_positive(Lit l) {
-    return (l & 1) == 0; // last bit 0
+    return (l & 1) == 0;
 }
 
 // Create literal from variable and sign
