@@ -1,6 +1,5 @@
 # SAT Solver
-==========
-Jednoduchý SAT solver implementující DPLL algoritmus s unitární propagací.
+SAT solver implementující DPLL algoritmus s unitární propagací.
 
 Sestavení:
 1. Přejděte do složky s projektem.
