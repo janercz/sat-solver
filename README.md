@@ -8,11 +8,10 @@ Pro sestavení projektu na všech platformách je vyžadován **CMake**  a **C++
 
 Sestavení:
 1. Otevřete terminál a přejděte do složky s projektem.
-2. Vytvořte build adresář: 
-    mkdir build
-    cd build
-3. Spusťte cmake: cmake ..
-4. Zkompilujte: cmake --build .
+2. Vytvořte build adresář: mkdir build
+3. Přejděte do adresáře: cd build
+4. Spusťte cmake: cmake ..
+5. Zkompilujte: cmake --build .
 
 Spuštění:
 ./solver <input.cnf>
