@@ -25,6 +25,8 @@ void Solver::load_formula(const Formula &formula) {
     assigns.assign(vars + 1, Value::None);
     levels.assign(vars + 1, -1);
     tries.assign(vars + 1, 0);
+    activity.assign(vars + 1, 0.0);
+    x = 1.0;
 
     for (size_t i = 0; i < clauses.size(); ++i) {
         if (clauses[i].literals.size() >= 2) {
@@ -44,6 +46,13 @@ bool Solver::solve() {
     bool result;
     while (true) {
         if (!propagate()) {
+            size_t start_i = trail_lim.empty() ? 0 : trail_lim.back();
+            for (size_t i = start_i; i < trail.size(); ++i) {
+                Var v = lit_to_var(trail[i]);
+                activity[v] += x;
+            }
+            x *= (1.0 / 0.95);
+
             if (!backtrack()) {
                 result = false; // UNSAT
                 break;
@@ -55,10 +64,14 @@ bool Solver::solve() {
             } else {
                 // Pick a literal
                 Lit next_p = -1;
+                double max = -1.0;
+
                 for (int i = 1; i <= vars; ++i) {
                     if (assigns[i] == Value::None) {
-                        next_p = make_lit(i, false);
-                        break;
+                        if (activity[i] > max) {
+                            max = activity[i];
+                            next_p = make_lit(i, false);
+                        }
                     }
                 }
                 if (next_p != -1) {

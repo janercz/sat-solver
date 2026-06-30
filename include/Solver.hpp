@@ -35,6 +35,10 @@ class Solver {
     // Level boundaries
     std::vector<int> trail_lim;
 
+    // Heuristics
+    std::vector<double> activity;
+    double x = 1.0;
+
     // Statistics
     long long unit_props = 0;
     long long decision_count = 0;
