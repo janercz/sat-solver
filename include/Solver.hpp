@@ -36,6 +36,7 @@ class Solver {
     std::vector<int> trail_lim;
 
     // Heuristics
+    std::vector<bool> polarity;
     std::vector<double> activity;
     double x = 1.0;
 

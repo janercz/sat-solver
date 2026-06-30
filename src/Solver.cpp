@@ -25,6 +25,7 @@ void Solver::load_formula(const Formula &formula) {
     assigns.assign(vars + 1, Value::None);
     levels.assign(vars + 1, -1);
     tries.assign(vars + 1, 0);
+    polarity.assign(vars + 1, false);
     activity.assign(vars + 1, 0.0);
     x = 1.0;
 
@@ -70,7 +71,7 @@ bool Solver::solve() {
                     if (assigns[i] == Value::None) {
                         if (activity[i] > max) {
                             max = activity[i];
-                            next_p = make_lit(i, false);
+                            next_p = make_lit(i, !polarity[i]);
                         }
                     }
                 }
@@ -171,6 +172,8 @@ void Solver::undo_one() {
     }
     trail.pop_back();
 
+    bool was_positive = (assigns[v] == Value::True);
+    polarity[v] = was_positive;
     assigns[v] = Value::None;
     levels[v] = -1;
     tries[v] = 0;
