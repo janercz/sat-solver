@@ -1,9 +1,14 @@
 # SAT Solver
 SAT solver implementující DPLL algoritmus s unitární propagací.
 
-Sestavení:
-1. Přejděte do složky s projektem.
-2. Vytvořte build adresář: mkdir build && cd build
+## Požadavky
+Pro sestavení projektu na všech platformách je vyžadován **CMake**  a **C++ kompilátor**.
+
+Sestavení (Linux):
+1. Otevřete terminál a přejděte do složky s projektem.
+2. Vytvořte build adresář: 
+    mkdir build
+    cd build
 3. Spusťte cmake: cmake ..
 4. Zkompilujte: cmake --build .
 
